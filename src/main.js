@@ -60,7 +60,7 @@ filterListener.addEventListener('click', e => {
     return;
   }
 
-  filter = encodeURIComponent(e.target.value);
+  filter = e.target.textContent;
   parameters = {
     params: {
       filter: filter,
@@ -80,21 +80,38 @@ async function fetchExersizes() {
 //  ===================== Запрос по фільтру  =====================
 
 async function filterFetch(params, e) {
-  const response = await axios.get(
-    'https://energyflow.b.goit.study/api/filters',
-    params
-  );
+  // const response = await axios.get(
+  //   'https://energyflow.b.goit.study/api/filters',
+  //   params
+  // );
 
-  try {
-    if (response.data.results.length === 0) {
-      throw new Error('No results found...');
-    }
-    renderFilterImg(response);
-    console.log(response);
-  } catch (error) {
-    console.log(error);
-    renderMessage();
-  }
+  // try {
+  //   if (response.data.results.length === 0) {
+  //     throw new Error('No results found...');
+  //   }
+  //   renderFilterImg(response);
+  //   console.log(response);
+  // } catch (error) {
+  //   console.log(error);
+  //   renderMessage();
+  // }
+
+  const response = await fetch(
+    `https://energyflow.b.goit.study/api/filters?filter=${filter}&page=1&limit=12`
+  )
+    .then(response => {
+      return response.json();
+    })
+    .then(api => {
+      if (response.data.results.length === 0) {
+        throw new Error(
+          `There are no images matching your search query. Please try again!`
+        );
+      }
+    })
+    .catch(error => {
+      console.log(error);
+    });
 }
 
 //  ===================== Вставлення карток по фільтру =====================
