@@ -128,7 +128,7 @@ html {
   opacity: 1;
 }
 .up-link:active {
-  background-color: #4e75ff;
+  background-color: var(--dark-grey);
 }
 .up-svg {
   display: block;
@@ -161,7 +161,7 @@ html {
   color: var(--primary-color);
 }
 
-.category {
+.exercise-name {
   font-size: 20px;
   font-weight: 400;
   letter-spacing: -0.02em;
@@ -342,8 +342,6 @@ html {
   border: none;
   border-radius: 18px;
   padding: 0;
-
-  position: relative;
 }
 
 .exersizes-pagination-list {

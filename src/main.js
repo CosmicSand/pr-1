@@ -18,7 +18,11 @@ const PAGINATION_CONTAINER = document.querySelector(
   '.exersizes-pagination-container'
 );
 
+const dash = document.querySelector('.dash');
+const exerciseName = document.querySelector('.exercise-name');
+
 let page = 1;
+let filterSubType = '';
 
 const filterListener = document.querySelector('.exersizes-list');
 const paginationListener = document.querySelector('.exersizes-pagination-list');
@@ -35,9 +39,12 @@ filterListener.addEventListener('click', e => {
   if (!e.target.nodeName === 'BUTTON') {
     return;
   }
-  const filter = e.target.textContent.trim();
+  exerciseNameHiding();
+  inputHidingAndRemoveListener();
+  const filterType = e.target.textContent.trim();
 
-  filterFetch(filter);
+  filterFetch(filterType);
+
   changeFilterBtnStyle(e);
 });
 
@@ -48,52 +55,50 @@ FILTER_IMG_CONTAINER.addEventListener('click', e => {
   if (!e.target.nodeName === 'DIV') {
     return;
   }
+  showExerciseName(e);
+  inputVisualisationAddListener();
 
   const filterType = document
     .querySelector('.exersizes-menu-btn-active')
     .textContent.trim();
 
-  const filterSubType = e.target.firstElementChild.textContent
-    .toLowerCase()
-    .trim();
+  const filterSubType = exerciseName.textContent.toLowerCase().trim();
   console.log(e.target.firstElementChild.textContent);
-  fetchExersizes(filterType, filterSubType);
+  fetchExersizes(filterType, filterSubType, page);
 });
 
 // ============ Запуск фільтрації при кліку на пагінацію ============
 
 PAGINATION_CONTAINER.addEventListener('click', e => {
   e.preventDefault();
+  let filterSubType = null;
+
+  // console.log(document.querySelector('[data-filter-sub-type]'));
   if (!e.target.nodeName === 'BUTTON') {
     return;
   }
-  let filterType;
-  let filterSubType;
-  let fetchingDirection;
-  page = parseFloat(e.target.textContent.trim());
+  const controlElement = document.querySelector('[data-filter-sub-type]');
 
-  const controlElement = document.querySelector('.exersizes-card-bytype');
-
-  if (!controlElement) {
-    fetchingDirection = 'exercises';
-    filterSubType = document
-      .querySelector('.exersizes-card-info-data')
-      .textContent.trim();
-  } else {
-    fetchingDirection = 'filters';
-    filterType = document
-      .querySelector('.exersizes-menu-btn-active')
-      .textContent.trim();
+  if (controlElement) {
+    filterSubType = exerciseName.textContent.toLowerCase().trim();
   }
+
+  const page = e.target.textContent.trim();
+
+  const filterType = document
+    .querySelector('.exersizes-menu-btn-active')
+    .textContent.trim();
+
+  paginationFetch(filterType, filterSubType, page);
+
   changingPaginationBtnStyle(e);
-  paginationFetch(filterType, filterSubType, page, fetchingDirection);
 });
 
 //  ===================== Запрос по фільтру  =====================
 
-async function filterFetch(filter) {
+async function filterFetch(filterType, filterSubType, page) {
   const response = await axios.get('/filters', {
-    params: keyGen(filter),
+    params: keyGen(filterType, filterSubType, page),
   });
 
   try {
@@ -101,7 +106,9 @@ async function filterFetch(filter) {
       throw new Error('No results found...');
     }
     renderFilterImg(response);
-    pagination(response);
+    if (page === 1) {
+      pagination(response);
+    }
   } catch (error) {
     renderMessage();
   }
@@ -109,33 +116,8 @@ async function filterFetch(filter) {
 
 // =========================Запит вправ  ========================
 
-async function fetchExersizes(filterType, filterSubType) {
+async function fetchExersizes(filterType, filterSubType, page) {
   const response = await axios.get('/exercises', {
-    params: keyGen(filterType, filterSubType),
-  });
-
-  try {
-    if (response.data.results.length === 0) {
-      throw new Error('No results found...');
-    }
-
-    renderExersizesCard(response);
-    pagination(response);
-  } catch (error) {
-    renderMessage();
-  }
-  console.log(response.data);
-}
-
-// =========================== Запит вправ по пагінації ===========================
-
-async function paginationFetch(
-  filterType,
-  filterSubType,
-  page,
-  fetchingDirection
-) {
-  const response = await axios.get(`/${fetchingDirection}`, {
     params: keyGen(filterType, filterSubType, page),
   });
 
@@ -144,15 +126,48 @@ async function paginationFetch(
       throw new Error('No results found...');
     }
 
-    if (filterSubType) {
-      renderExersizesCard(response);
-    } else {
-      renderFilterImg(response);
+    renderExersizesCard(response);
+    if (page === 1) {
+      pagination(response);
     }
+
+    console.log(response);
   } catch (error) {
     renderMessage();
   }
   console.log(response.data);
+}
+
+// =========================== Запит вправ по пагінації ===========================
+
+async function paginationFetch(filterType, filterSubType, page) {
+  // let response;
+
+  if (filterSubType) {
+    response = await fetchExersizes(filterType, filterSubType, page);
+  } else {
+    response = await filterFetch(filterType, filterSubType, page);
+  }
+
+  // if (filterType && !filterSubType) {
+  //   response = filterFetch(filter, page);
+  // } else {
+  //   response = fetchExersizes(filterType, filterSubType, page);
+  // }
+  // try {
+  //   if (response.data.results.length === 0) {
+  //     throw new Error('No results found...');
+  //   }
+
+  //   if (filterSubType) {
+  //     renderExersizesCard(response);
+  //   } else {
+  //     renderFilterImg(response);
+  //   }
+  // } catch (error) {
+  //   renderMessage();
+  // }
+  // console.log(response.data);
 }
 
 //  ===================== Вставлення карток по фільтру =====================
@@ -203,7 +218,7 @@ function renderExersizesCard(resp) {
       } else if (viewPortWidth < 1440 && viewPortWidth >= 768) {
         if (exerciseName.length > 17) {
           exerciseName =
-            el.name[0].toUpperCase() + el.name.slice(1, 17).trim() + '...';
+            el.name[0].toUpperCase() + el.name.slice(1, 16).trim() + '...';
         }
       } else {
         exerciseName =
@@ -245,15 +260,15 @@ function renderExersizesCard(resp) {
     </div>
     <ul class="exersizes-card-info-list">
         <li class="exersizes-card-info-item"><p class="exersizes-card-info-descr">Burned calories:
-            <span class="exersizes-card-info-data">${el.burnedCalories} / ${
-        el.time
-      } min</span></p></li>
+            <span class="exersizes-card-info-data" data-burning-calories>${
+              el.burnedCalories
+            } / ${el.time} min</span></p></li>
         <li class="exersizes-card-info-item"><p class="exersizes-card-info-descr">Body part:
-            <span class="exersizes-card-info-data">${
+            <span class="exersizes-card-info-data" data-body-type>${
               el.bodyPart[0].toUpperCase() + el.bodyPart.slice(1)
             }</span></p></li>
         <li class="exersizes-card-info-item"><p class="exersizes-card-info-descr">Target:
-            <span class="exersizes-card-info-data">${
+            <span class="exersizes-card-info-data" data-filter-sub-type>${
               el.target[0].toUpperCase() + el.target.slice(1)
             }</span></p></li>
     </ul>
@@ -285,6 +300,23 @@ function changeFilterBtnStyle(event) {
   });
   const activeBtn = event.target;
   activeBtn.classList.add('exersizes-menu-btn-active');
+}
+
+// ======================== Поява тексту вправи ========================
+
+function showExerciseName(e) {
+  dash.classList.remove('visually-hidden');
+  exerciseName.classList.remove('visually-hidden');
+
+  exerciseName.textContent = e.target.firstElementChild.textContent.trim();
+}
+
+// =========================== Видалення тексту вправи ===========================
+
+function exerciseNameHiding() {
+  exerciseName.textContent = '';
+  dash.classList.add('visually-hidden');
+  exerciseName.classList.add('visually-hidden');
 }
 
 // =========================== Key gen ===========================
@@ -383,3 +415,60 @@ function scrollToTopShowOrHide() {
 }
 
 scrollToTopShowOrHide();
+
+// =================== Функція, що робить пошук видимим =========
+
+function inputVisualisationAddListener() {
+  const searchInput = document.querySelector('.exersizes-input');
+  const inputContainer = document.querySelector('.exersizes-input-container');
+  const clearBtn = document.querySelector('.exersizes-input-btn');
+  inputContainer.classList.remove('visually-hidden');
+  searchInput.addEventListener('keyup', showClearBtnAndCleaning);
+}
+
+// =================== Функція, що очищує пошук ===================
+
+function showClearBtnAndCleaning() {
+  const searchInput = document.querySelector('.exersizes-input');
+  if (event) {
+    event.preventDefault();
+    const clearBtn = document.querySelector('.exersizes-input-btn');
+    clearBtn.classList.remove('visually-hidden');
+    const cleaning = () => {
+      e.preventDefault();
+      searchInput.value = '';
+      clearBtn.addEventListener('click', cleaning);
+    };
+  }
+}
+
+// =================== Функція, що робить пошук невидимим =========
+
+function inputHidingAndRemoveListener() {
+  const searchInput = document.querySelector('.exersizes-input');
+  const inputContainer = document.querySelector('.exersizes-input-container');
+  const clearBtn = document.querySelector('.exersizes-input-btn');
+
+  searchInput.removeEventListener('keydown', showClearBtnAndCleaning);
+  inputContainer.classList.add('visually-hidden');
+  clearBtn.classList.add('visually-hidden');
+}
+
+// =================== Функція, що очищує інпут =========
+
+function clearInput() {
+  const inputContainer = document.querySelector('.exersizes-input-container');
+
+  const clearBtn = document.querySelector('.exersizes-input-btn');
+
+  if (!clearBtn.classList.contains('visually-hidden')) {
+    const cleaning = () => {
+      e.preventDefault();
+      inputContainer.value = '';
+      clearBtn.classList.add('visually-hidden');
+    };
+    clearBtn.addEventListener('click', cleaning);
+    clearBtn.removeEventListener('click', cleaning);
+  }
+}
+clearInput();
