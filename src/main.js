@@ -423,23 +423,22 @@ function inputVisualisationAddListener() {
   const inputContainer = document.querySelector('.exersizes-input-container');
   const clearBtn = document.querySelector('.exersizes-input-btn');
   inputContainer.classList.remove('visually-hidden');
-  searchInput.addEventListener('keyup', showClearBtnAndCleaning);
+  searchInput.addEventListener('input', showClearBtnAndCleaning);
 }
 
 // =================== Функція, що очищує пошук ===================
 
 function showClearBtnAndCleaning() {
   const searchInput = document.querySelector('.exersizes-input');
-  if (event) {
-    event.preventDefault();
-    const clearBtn = document.querySelector('.exersizes-input-btn');
-    clearBtn.classList.remove('visually-hidden');
-    const cleaning = () => {
-      e.preventDefault();
-      searchInput.value = '';
-      clearBtn.addEventListener('click', cleaning);
-    };
-  }
+
+  const clearBtn = document.querySelector('.exersizes-input-btn');
+  clearBtn.classList.remove('visually-hidden');
+  const cleaning = e => {
+    e.preventDefault();
+    console.log(searchInput.value);
+    searchInput.value = '';
+  };
+  clearBtn.addEventListener('click', cleaning);
 }
 
 // =================== Функція, що робить пошук невидимим =========
@@ -449,7 +448,7 @@ function inputHidingAndRemoveListener() {
   const inputContainer = document.querySelector('.exersizes-input-container');
   const clearBtn = document.querySelector('.exersizes-input-btn');
 
-  searchInput.removeEventListener('keydown', showClearBtnAndCleaning);
+  searchInput.removeEventListener('input', showClearBtnAndCleaning);
   inputContainer.classList.add('visually-hidden');
   clearBtn.classList.add('visually-hidden');
 }
