@@ -21,7 +21,7 @@ const PAGINATION_CONTAINER = document.querySelector(
 const dash = document.querySelector('.dash');
 const exerciseName = document.querySelector('.exercise-name');
 
-const page = 1;
+let page = 1;
 let filterSubType = '';
 
 const filterListener = document.querySelector('.exersizes-list');
@@ -36,23 +36,23 @@ document.addEventListener('DOMContentLoaded', filterFetch());
 
 filterListener.addEventListener('click', e => {
   e.preventDefault();
-  if (e.target.nodeName !== 'BUTTON') {
+  if (!e.target.nodeName === 'BUTTON') {
     return;
-  } else {
-    const filterType = e.target.textContent.trim();
-    filterFetch(filterType);
-    exerciseNameHiding();
-    inputHidingAndRemoveListener();
-
-    changeFilterBtnStyle(e);
   }
+  exerciseNameHiding();
+  inputHidingAndRemoveListener();
+  const filterType = e.target.textContent.trim();
+
+  filterFetch(filterType);
+
+  changeFilterBtnStyle(e);
 });
 
 // ============ Запуск фільтрації при кліку на загальну картку ============
 
 FILTER_IMG_CONTAINER.addEventListener('click', e => {
   e.preventDefault();
-  if (e.target.nodeName !== 'DIV') {
+  if (!e.target.nodeName === 'DIV') {
     return;
   }
   showExerciseName(e);
@@ -71,31 +71,27 @@ FILTER_IMG_CONTAINER.addEventListener('click', e => {
 
 PAGINATION_CONTAINER.addEventListener('click', e => {
   e.preventDefault();
-  if (e.target.nodeName !== 'BUTTON') {
+  let filterSubType = null;
+
+  // console.log(document.querySelector('[data-filter-sub-type]'));
+  if (!e.target.nodeName === 'BUTTON') {
     return;
-  } else {
-    let filterSubType = null;
-
-    // console.log(document.querySelector('[data-filter-sub-type]'));
-    if (!e.target.nodeName === 'BUTTON') {
-      return;
-    }
-    const controlElement = document.querySelector('[data-filter-sub-type]');
-
-    if (controlElement) {
-      filterSubType = exerciseName.textContent.toLowerCase().trim();
-    }
-
-    const page = e.target.textContent.trim();
-
-    const filterType = document
-      .querySelector('.exersizes-menu-btn-active')
-      .textContent.trim();
-
-    paginationFetch(filterType, filterSubType, page);
-
-    changingPaginationBtnStyle(e);
   }
+  const controlElement = document.querySelector('[data-filter-sub-type]');
+
+  if (controlElement) {
+    filterSubType = exerciseName.textContent.toLowerCase().trim();
+  }
+
+  const page = e.target.textContent.trim();
+
+  const filterType = document
+    .querySelector('.exersizes-menu-btn-active')
+    .textContent.trim();
+
+  paginationFetch(filterType, filterSubType, page);
+
+  changingPaginationBtnStyle(e);
 });
 
 //  ===================== Запрос по фільтру  =====================
@@ -110,8 +106,9 @@ async function filterFetch(filterType, filterSubType, page) {
       throw new Error('No results found...');
     }
     renderFilterImg(response);
-
-    pagination(response);
+    if (page === 1) {
+      pagination(response);
+    }
   } catch (error) {
     renderMessage();
   }
@@ -144,33 +141,13 @@ async function fetchExersizes(filterType, filterSubType, page) {
 // =========================== Запит вправ по пагінації ===========================
 
 async function paginationFetch(filterType, filterSubType, page) {
-  let response = null;
+  let response;
 
   if (filterSubType) {
     response = await fetchExersizes(filterType, filterSubType, page);
   } else {
     response = await filterFetch(filterType, filterSubType, page);
   }
-
-  // if (filterType && !filterSubType) {
-  //   response = filterFetch(filter, page);
-  // } else {
-  //   response = fetchExersizes(filterType, filterSubType, page);
-  // }
-  // try {
-  //   if (response.data.results.length === 0) {
-  //     throw new Error('No results found...');
-  //   }
-
-  //   if (filterSubType) {
-  //     renderExersizesCard(response);
-  //   } else {
-  //     renderFilterImg(response);
-  //   }
-  // } catch (error) {
-  //   renderMessage();
-  // }
-  // console.log(response.data);
 }
 
 //  ===================== Вставлення карток по фільтру =====================
@@ -354,7 +331,7 @@ function keyGen(filterType, filterSubType, page) {
 
 // =========================== Pagination ===========================
 
-async function pagination(resp) {
+function pagination(resp) {
   let paginationElements = '';
   const pagesQuantity = resp.data.totalPages;
   const paginationList = document.querySelector('.exersizes-pagination-list');
