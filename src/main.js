@@ -240,7 +240,11 @@ function renderExersizesCard(resp) {
         <div class="exersizes-card-workout-cont">
             <div class="exersizes-card-workout-header-title">workout</div>
             <div class="exersizes-card-workout-rate-container">
-                <span class="exersizes-card-workout-rate">${el.rating}</span>
+                <span class="exersizes-card-workout-rate">${Math.round(
+                  el.rating
+                )
+                  .toString()
+                  .padEnd(3, '.0')}</span>
                 <svg class="exersizes-card-rate-icon" width="18" height="18" aria-label="rate-icon">
                     <use href="./img/sprite.svg#star"></use>
                 </svg>
