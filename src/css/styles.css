@@ -89,6 +89,19 @@ address {
   display: none;
 }
 
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  border: 0;
+  padding: 0;
+  white-space: nowrap;
+  clip-path: inset(100%);
+  clip: rect(0 0 0 0);
+  overflow: hidden;
+}
+
 /* ==================================== Стилі для РОБОЧОГО контейнера ========================================= */
 
 .exersizes-container {
@@ -456,7 +469,7 @@ address {
     flex-direction: row;
     justify-content: space-between;
     flex-wrap: nowrap;
-    margin-top: 32px;
+    padding-top: 32px;
   }
 
   .exersizes-message-container {
@@ -647,9 +660,9 @@ address {
   }
 
   .exersizes-card-info-list {
-    column-gap: 16px;
+    /* column-gap: 16px; */
     row-gap: 16px;
-    justify-content: flex-start;
+    justify-content: space-between;
   }
 
   .noresult-message {
