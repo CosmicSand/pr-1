@@ -67,21 +67,26 @@ PAGINATION_CONTAINER.addEventListener('click', e => {
   if (!e.target.nodeName === 'BUTTON') {
     return;
   }
-  page = e.target.textContent.trim();
+  let filterType;
+  let filterSubType;
+  let fetchingDirection;
+  page = parseFloat(e.target.textContent.trim());
 
   const controlElement = document.querySelector('.exersizes-card-bytype');
 
   if (!controlElement) {
-    const filterSubType = document
+    fetchingDirection = 'exercises';
+    filterSubType = document
       .querySelector('.exersizes-card-info-data')
       .textContent.trim();
+  } else {
+    fetchingDirection = 'filters';
+    filterType = document
+      .querySelector('.exersizes-menu-btn-active')
+      .textContent.trim();
   }
-  const filterType = document
-    .querySelector('.exersizes-menu-btn-active')
-    .textContent.trim();
-
   changingPaginationBtnStyle(e);
-  paginationFetch(filterType, filterSubType, page);
+  paginationFetch(filterType, filterSubType, page, fetchingDirection);
 });
 
 //  ===================== Запрос по фільтру  =====================
@@ -119,13 +124,18 @@ async function fetchExersizes(filterType, filterSubType) {
   } catch (error) {
     renderMessage();
   }
-  console.log(response.data.results);
+  console.log(response.data);
 }
 
 // =========================== Запит вправ по пагінації ===========================
 
-async function paginationFetch(filterType, filterSubType) {
-  const response = await axios.get('/exercises', {
+async function paginationFetch(
+  filterType,
+  filterSubType,
+  page,
+  fetchingDirection
+) {
+  const response = await axios.get(`/${fetchingDirection}`, {
     params: keyGen(filterType, filterSubType, page),
   });
 
@@ -139,12 +149,10 @@ async function paginationFetch(filterType, filterSubType) {
     } else {
       renderFilterImg(response);
     }
-
-    pagination(response);
   } catch (error) {
     renderMessage();
   }
-  console.log(response.data.results);
+  console.log(response.data);
 }
 
 //  ===================== Вставлення карток по фільтру =====================
