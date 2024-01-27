@@ -371,3 +371,15 @@ function changingPaginationBtnStyle(e) {
   const currentActiveBtn = e.target;
   currentActiveBtn.classList.add('exersizes-pagination-item-active');
 }
+
+// =================== Функція повернення сторінки до форми пошуку ===================
+
+function scrollToTopShowOrHide() {
+  if (window.scrollY > 100) {
+    document.querySelector('.up-link').classList.add('show');
+  } else {
+    document.querySelector('.up-link').classList.remove('show');
+  }
+}
+
+scrollToTopShowOrHide();
