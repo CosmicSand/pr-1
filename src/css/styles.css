@@ -275,12 +275,17 @@ address {
 
 /* =========================================== Пагінація ==================================== */
 
-.exersizes-paginftion-container {
+.exersizes-pagination-container {
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-wrap: wrap;
+  width: 70%;
+  margin-left: auto;
+  margin-right: auto;
   padding-top: 20px;
   column-gap: 20px;
+  row-gap: 10px;
 }
 
 .exersizes-pagination-btn {
@@ -301,13 +306,19 @@ address {
   position: relative;
 }
 
-.exersizes-paginftion-list {
+.exersizes-pagination-list {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  column-gap: 3px;
+  row-gap: 5px;
+  width: 70%;
+  margin-left: auto;
+  margin-right: auto;
 }
 
-.exersizes-paginftion-item-active {
+.exersizes-pagination-item-active {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -316,7 +327,7 @@ address {
   border-radius: 18px;
 }
 
-.exersizes-paginftion-item-active > .exersizes-pagination-btn {
+.exersizes-pagination-item-active > .exersizes-pagination-btn {
   color: var(--primary-color);
 }
 
@@ -565,7 +576,7 @@ address {
 
   /* ============================================ Пагінація =========================== */
 
-  .exersizes-paginftion-container {
+  .exersizes-pagination-container {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -580,7 +591,7 @@ address {
     letter-spacing: 0.04em;
   }
 
-  .exersizes-paginftion-list {
+  .exersizes-pagination-list {
     display: flex;
     align-items: center;
     justify-content: center;

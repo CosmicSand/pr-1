@@ -15,14 +15,14 @@ const MESSAGE_CONTAINER = document.querySelector(
 );
 
 const PAGINATION_CONTAINER = document.querySelector(
-  '.exersizes-paginftion-container'
+  '.exersizes-pagination-container'
 );
 
 let page = 1;
 
 const filterListener = document.querySelector('.exersizes-list');
-const paginationListener = document.querySelector('.exersizes-paginftion-list');
-const paginftionBtn = document.querySelector('.exersizes-pagination-btn');
+const paginationListener = document.querySelector('.exersizes-pagination-list');
+const paginationBtn = document.querySelector('.exersizes-pagination-btn');
 
 // ============ Запуск фільтрації при завантаженні сторінки ============
 
@@ -67,8 +67,21 @@ PAGINATION_CONTAINER.addEventListener('click', e => {
   if (!e.target.nodeName === 'BUTTON') {
     return;
   }
-  const pageNumber = e.target.textContent.trim();
-  console.log(pageNumber);
+  page = e.target.textContent.trim();
+
+  const controlElement = document.querySelector('.exersizes-card-bytype');
+
+  if (!controlElement) {
+    const filterSubType = document
+      .querySelector('.exersizes-card-info-data')
+      .textContent.trim();
+  }
+  const filterType = document
+    .querySelector('.exersizes-menu-btn-active')
+    .textContent.trim();
+
+  changingPaginationBtnStyle(e);
+  paginationFetch(filterType, filterSubType, page);
 });
 
 //  ===================== Запрос по фільтру  =====================
@@ -102,6 +115,31 @@ async function fetchExersizes(filterType, filterSubType) {
     }
 
     renderExersizesCard(response);
+    pagination(response);
+  } catch (error) {
+    renderMessage();
+  }
+  console.log(response.data.results);
+}
+
+// =========================== Запит вправ по пагінації ===========================
+
+async function paginationFetch(filterType, filterSubType) {
+  const response = await axios.get('/exercises', {
+    params: keyGen(filterType, filterSubType, page),
+  });
+
+  try {
+    if (response.data.results.length === 0) {
+      throw new Error('No results found...');
+    }
+
+    if (filterSubType) {
+      renderExersizesCard(response);
+    } else {
+      renderFilterImg(response);
+    }
+
     pagination(response);
   } catch (error) {
     renderMessage();
@@ -243,7 +281,7 @@ function changeFilterBtnStyle(event) {
 
 // =========================== Key gen ===========================
 
-function keyGen(filterType, filterSubType) {
+function keyGen(filterType, filterSubType, page) {
   const config = {
     page,
     limit: 12,
@@ -276,32 +314,34 @@ function keyGen(filterType, filterSubType) {
 function pagination(resp) {
   let paginationElements = '';
   const pagesQuantity = resp.data.totalPages;
-  const paginationList = document.querySelector('.exersizes-paginftion-list');
+  const paginationList = document.querySelector('.exersizes-pagination-list');
   paginationList.innerHTML = '';
   if (pagesQuantity > 1) {
     for (let i = 1; i <= pagesQuantity; i++) {
       if (i === 1) {
         paginationElements += `<li
-                class="exersizes-paginftion-item exersizes-paginftion-item-active"
+                class="exersizes-pagination-item exersizes-pagination-item-active"
               >
 
           
      <button class="exersizes-pagination-btn"
                   type="button"
-                  name="first"
+                  name="pagination-button"
+                  
                 >
                   ${i}
                 </button>
               </li>`;
       } else {
         paginationElements += `<li
-                class="exersizes-paginftion-item "
+                class="exersizes-pagination-item"
               >
 
           
      <button class="exersizes-pagination-btn"
                   type="button"
-                  name="first"
+                    name="pagination-button"
+                  
                 >
                   ${i}
                 </button>
@@ -314,9 +354,12 @@ function pagination(resp) {
 
 // ======================== Зміна стилів пагінації ========================
 
-function changingPaginationBtnStyle() {
-  const firstPageBtn = document.querySelector('.exersizes-pagination-btn');
-  firstPageBtn.classList.add('exersizes-pagination-item-active');
+function changingPaginationBtnStyle(e) {
+  const pageNumber = e.target.textContent.trim();
+  const previousActiveBtn = document.querySelector(
+    '.exersizes-pagination-item-active'
+  );
+  previousActiveBtn.classList.remove('exersizes-pagination-item-active');
+  const currentActiveBtn = e.target;
+  currentActiveBtn.classList.add('exersizes-pagination-item-active');
 }
-
-console.log(window.innerWidth);
