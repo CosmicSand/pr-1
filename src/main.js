@@ -22,7 +22,7 @@ const dash = document.querySelector('.dash');
 const exerciseName = document.querySelector('.exercise-name');
 
 const page = 1;
-let filterSubType = '';
+// let filterSubType = '';
 
 const filterListener = document.querySelector('.exersizes-list');
 const paginationListener = document.querySelector('.exersizes-pagination-list');
@@ -40,6 +40,8 @@ filterListener.addEventListener('click', e => {
     return;
   } else {
     const filterType = e.target.textContent.trim();
+    sessionStorage.clear();
+    sessionStorage.setItem('filterType', JSON.stringify(filterType));
     filterFetch(filterType);
     exerciseNameHiding();
     inputHidingAndRemoveListener();
@@ -63,20 +65,22 @@ FILTER_IMG_CONTAINER.addEventListener('click', e => {
     .textContent.trim();
 
   const filterSubType = exerciseName.textContent.toLowerCase().trim();
-  console.log(e.target.firstElementChild.textContent);
   fetchExersizes(filterType, filterSubType, page);
+
+  sessionStorage.setItem('filterSubType', JSON.stringify(filterSubType));
 });
 
 // ============ Запуск фільтрації при кліку на пагінацію ============
 
 PAGINATION_CONTAINER.addEventListener('click', e => {
   e.preventDefault();
+  console.log(JSON.parse(sessionStorage.getItem('previouParams')));
+
   if (e.target.nodeName !== 'BUTTON') {
     return;
   } else {
     let filterSubType = null;
 
-    // console.log(document.querySelector('[data-filter-sub-type]'));
     if (!e.target.nodeName === 'BUTTON') {
       return;
     }
@@ -109,8 +113,14 @@ async function filterFetch(filterType, filterSubType, page) {
     if (response.data.results.length === 0) {
       throw new Error('No results found...');
     }
-    renderFilterImg(response);
 
+    sessionStorage.clear();
+    sessionStorage.setItem(
+      'previouParams',
+      JSON.stringify(response.config.params)
+    );
+    renderFilterImg(response);
+    console.log(response);
     pagination(response);
   } catch (error) {
     renderMessage();
@@ -128,6 +138,11 @@ async function fetchExersizes(filterType, filterSubType, page) {
     if (response.data.results.length === 0) {
       throw new Error('No results found...');
     }
+    sessionStorage.clear();
+    sessionStorage.setItem(
+      'previouParams',
+      JSON.stringify(response.config.params)
+    );
 
     renderExersizesCard(response);
     if (page === 1) {
@@ -353,6 +368,7 @@ function keyGen(filterType, filterSubType, page) {
       config.bodypart = filterSubType;
       break;
   }
+
   return config;
 }
 
