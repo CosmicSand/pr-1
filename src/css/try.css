@@ -1,0 +1,133 @@
+html {
+  scroll-behavior: smooth;
+}
+
+.up-link {
+  display: none;
+  position: fixed;
+  width: 40px;
+  height: 40px;
+  right: 16px;
+  bottom: 16px;
+  width: fit-content;
+  border-radius: 50%;
+  opacity: 0.6;
+  background-color: var(--grey);
+  box-shadow: 1px 2px 10px 2px var(--dark-grey);
+  transition: background-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out,
+    scale 0.2s ease-in-out;
+}
+.up-link.show {
+  display: block;
+}
+.up-link:hover {
+  scale: 1.15;
+  opacity: 1;
+}
+.up-link:active {
+  background-color: var(--dark-grey);
+}
+.up-svg {
+  display: block;
+  margin: 0 auto;
+  fill: #fafafa;
+  opacity: 0.85;
+  transition: opacity 0.2s ease-in-out, scale 0.2s ease-in-out;
+}
+.up-svg:hover {
+  opacity: 1;
+  scale: 1.15;
+}
+
+.exersizes-container {
+  padding-top: 20px;
+  padding-bottom: 40px;
+  padding-left: 20px;
+  padding-right: 20px;
+  background-color: var(--dark-white);
+  border-radius: 30px;
+}
+
+.exersizes-header {
+  font-size: 32px;
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--primary-color);
+}
+
+.exercise-name {
+  font-size: 20px;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  text-transform: capitalize;
+  color: rgba(27, 27, 27, 0.5);
+}
+
+.exersizes-header-filter-cont {
+  display: flex;
+  flex-direction: column;
+  row-gap: 20px;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  padding-top: 20px;
+}
+
+.exersizes-input-container {
+  position: relative;
+}
+.exersizes-input {
+  max-width: 295px;
+  height: 42px;
+  padding-top: 12px;
+  padding-bottom: 12px;
+  padding-left: 14px;
+  padding-right: 54px;
+  border-radius: 30px;
+  background-color: var(--secondary-color);
+}
+
+.exersizes-input::placeholder {
+  font-size: 14px;
+  line-height: 1.28;
+  color: var(--primary-color);
+}
+.exersizes-input-btn-container {
+  position: absolute;
+  display: flex;
+  top: 50%;
+  right: 14px;
+  transform: translateY(-50%);
+  column-gap: 5px;
+  align-items: center;
+  justify-content: center;
+}
+.exersizes-input-btn {
+  width: fit-content;
+  height: 18px;
+  border: none;
+  padding: 0;
+  margin: 0;
+  background-color: transparent;
+  fill: transparent;
+  stroke: var(--primary-color);
+}
+
+.exersizes-list {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  column-gap: 6px;
+}
+
+.exersizes-list-item {
+  width: fit-content;
+  border-radius: 30px;
+}
+
+@media (min-width: 375px) {
+  .container {
+    max-width: 335px;
+  }
+}

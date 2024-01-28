@@ -39,8 +39,7 @@ filterListener.addEventListener('click', e => {
     return;
   } else {
     const filterType = e.target.textContent.trim();
-    sessionStorage.clear();
-    sessionStorage.setItem('filterType', JSON.stringify(filterType));
+
     filterFetch(filterType);
     exerciseNameHiding();
     inputHidingAndRemoveListener();
@@ -112,15 +111,12 @@ async function filterFetch(filterType, filterSubType, page) {
     if (response.data.results.length === 0) {
       throw new Error('No results found...');
     }
-
-    sessionStorage.clear();
-    sessionStorage.setItem(
-      'previouParams',
-      JSON.stringify(response.config.params)
-    );
+    const paginationList = document.querySelector('.exersizes-pagination-list');
+    paginationList.innerHTML = '';
     renderFilterImg(response);
-    console.log(response);
-    pagination(response);
+    if (page <= 1) {
+      pagination(response);
+    }
   } catch (error) {
     renderMessage();
   }
@@ -137,22 +133,15 @@ async function fetchExersizes(filterType, filterSubType, page) {
     if (response.data.results.length === 0) {
       throw new Error('No results found...');
     }
-    sessionStorage.clear();
-    sessionStorage.setItem(
-      'previouParams',
-      JSON.stringify(response.config.params)
-    );
-
+    const paginationList = document.querySelector('.exersizes-pagination-list');
+    paginationList.innerHTML = '';
     renderExersizesCard(response);
     if (page === 1) {
       pagination(response);
     }
-
-    console.log(response);
   } catch (error) {
     renderMessage();
   }
-  console.log(response.data);
 }
 
 // =========================== Запит вправ по пагінації ===========================
@@ -166,6 +155,45 @@ async function paginationFetch(filterType, filterSubType, page) {
     response = await filterFetch(filterType, filterSubType, page);
   }
 }
+// ============================================================
+
+// async function fetch(e) {
+//   let response;
+// const page = e.target.textContent.trim();
+//   const exercise = document.querySelector('.exercise-name').textContent;
+// const type = document.querySelector('.exersizes-menu-btn-active').value;
+//   if (type && exercise) {
+//     response = await axios.get('/exercises', {
+//       params: keyGen(type, exercise, page)
+//     });
+//     try {
+//       if (response.data.results.length === 0) {
+//         throw new Error('No results found...');
+//       }
+//       renderExersizesCard(response);
+//       if (page === 1) {
+//         pagination(response);
+//       }
+//       changingPaginationBtnStyle(e);
+//     } catch (error) {
+//       renderMessage();
+//     }
+//   } else {
+// response = await axios.get('/filter', {
+//   params: keyGen(type, exercise, page),
+// });
+//   }
+//   try {
+//     if (response.data.results.length === 0) {
+//       throw new Error('No results found...');
+//     }
+//     renderFilterImg(response);
+//     if (page === 1) { pagination(response) };
+//     changingPaginationBtnStyle(e);
+//   } catch (error) {
+//     renderMessage();
+//   }
+// }
 
 //  ===================== Вставлення карток по фільтру =====================
 
@@ -200,6 +228,7 @@ function renderExersizesCard(resp) {
   FILTER_IMG_CONTAINER.classList.add('visually-hidden');
   MESSAGE_CONTAINER.classList.add('visually-hidden');
   EXERCISES_CARD_CONTAINER.innerHTML = '';
+  const id = resp.data.results[0].id;
   const markup = results
     .map(el => {
       let exerciseName = el.name;
@@ -223,12 +252,6 @@ function renderExersizesCard(resp) {
         console.log('320');
       }
 
-      // if (exerciseName.length > 17) {
-      //   exerciseName =
-      //     el.name[0].toUpperCase() + el.name.slice(1, 17).trim() + '...';
-      // } else {
-      //   exerciseName = el.name[0].toUpperCase() + el.name.slice(1);
-      // }
       return `        <div class="exersizes-card">
     <div class="exersizes-card-header-cont">
         <div class="exersizes-card-workout-cont">
@@ -246,7 +269,7 @@ function renderExersizesCard(resp) {
             </div>
            
         </div>
-       <button class="exersizes-card-btn" type="button" data-id=${id}>start 
+       <button class="exersizes-card-btn" type="button" data-id=${id} >start 
         <svg class="exersizes-card-btn-icon" width="14" height="14" aria-label="arrow-icon">
             <use href="./img/sprite.svg#arrow"></use>
         </svg>
@@ -316,13 +339,13 @@ function showExerciseName(e) {
 
 function exerciseNameHiding() {
   exerciseName.textContent = '';
-  dash.classList.add('visually-hidden');
-  exerciseName.classList.add('visually-hidden');
+  dash.classList.add('hidden');
+  exerciseName.classList.add('hidden');
 }
 
 // =========================== Key gen ===========================
 
-function keyGen(filterType, filterSubType, page) {
+function keyGen(filterType = null, filterSubType = null, page) {
   const config = {
     page,
     limit: 12,
