@@ -161,7 +161,7 @@ async function paginationFetch(filterType, filterSubType, page) {
   }
 }
 
-// ========================== Пошук вправи за назвою ==========================
+// ========================== Пошук вправи за назвою input ==========================
 
 async function searchByName(e) {
   e.preventDefault();
@@ -171,29 +171,36 @@ async function searchByName(e) {
     return;
   }
 
-  // const searchQuery = document.querySelector('.exersizes-input').value.trim();
+  const searchQuery = document
+    .querySelector('.exersizes-input')
+    .value.trim()
+    .toLowerCase();
   // const page = document
   //   .querySelector('.exersizes-pagination-item-active')
   //   .textContent.trim();
-  // const filterType = sessionStorage.getItem('filterType').slice(1, -1);
-  // const filterSubType = sessionStorage.getItem('filterSubType').slice(1, -1);
 
-  // try {
-  //   if (searchQuery.length === 0) {
-  //     throw new Error('Nthing to search...');
-  //   } else {
-  //     const response = await axios.get('/exercises', {
-  //       params: keyGen(filterType, filterSubType, page, searchQuery),
-  //     });
-  //     if (response.data.results.length === 0) {
-  //       throw new Error('No results found...');
-  //     }
-  //     renderExersizesCard(response);
-  //   }
-  // } catch (error) {
-  //   console.log(error);
-  //   renderMessage();
-  // }
+  console.log(sessionStorage.getItem('filterSubType'));
+  const filterType = sessionStorage.getItem('filterType').slice(1, -1);
+  const filterSubType = sessionStorage.getItem('filterSubType').slice(1, -1);
+
+  try {
+    if (searchQuery.length === 0) {
+      throw new Error('Nthing to search...');
+    } else {
+      const response = await axios.get('/exercises', {
+        params: keyGen(filterType, filterSubType, page, searchQuery),
+      });
+      if (response.data.results.length === 0) {
+        throw new Error('No results found...');
+      }
+      simpleInputCleaning();
+      renderExersizesCard(response);
+      pagination(response);
+    }
+  } catch (error) {
+    console.log(error);
+    renderMessage();
+  }
 
   // try {
   //   if (response.data.results.length === 0) {
@@ -218,7 +225,7 @@ async function renderFilterImg(resp) {
     .map(el => {
       const filter = el.filter;
       const target = el.name;
-      return `<div class="exersizes-card-bytype" style="background: linear-gradient(
+      return `<li class="first-filter"><div class="exersizes-card-bytype" style="background: linear-gradient(
     0deg,
     rgba(16, 16, 16, 0.7) 0%,
     rgba(16, 16, 16, 0.7) 100%
@@ -231,7 +238,7 @@ async function renderFilterImg(resp) {
         <p class="exersizes-card-bytype-text" data-filter="${filter}" data-target="${target}">${
         el.filter
       }</p>
-      </div>`;
+      </div></li>`;
     })
     .join('');
   FILTER_IMG_CONTAINER.insertAdjacentHTML('beforeend', markup);
@@ -274,7 +281,7 @@ function renderExersizesCard(resp) {
       // } else {
       //   exerciseName = el.name[0].toUpperCase() + el.name.slice(1);
       // }
-      return `        <div class="exersizes-card">
+      return `        <li class="second-filter"><div class="exersizes-card">
     <div class="exersizes-card-header-cont">
         <div class="exersizes-card-workout-cont">
             <div class="exersizes-card-workout-header-title">workout</div>
@@ -318,7 +325,7 @@ function renderExersizesCard(resp) {
               el.target[0].toUpperCase() + el.target.slice(1)
             }</span></p></li>
     </ul>
-</div>`;
+</div></li>`;
     })
     .join('');
   EXERCISES_CARD_CONTAINER.insertAdjacentHTML('beforeend', markup);
@@ -494,6 +501,7 @@ function showClearBtnAndCleaning() {
     e.preventDefault();
     console.log(searchInput.value);
     searchInput.value = '';
+    clearBtn.classList.add('visually-hidden');
   };
   clearBtn.addEventListener('click', cleaning);
 }
@@ -515,7 +523,7 @@ function inputHidingAndRemoveListeners() {
 
 // =================== Функція, що очищує інпут =========
 
-function clearInput() {
+function cleanInput() {
   const inputContainer = document.querySelector('.exersizes-input-container');
 
   const clearBtn = document.querySelector('.exersizes-input-btn');
@@ -530,4 +538,12 @@ function clearInput() {
     clearBtn.removeEventListener('click', cleaning);
   }
 }
-clearInput();
+
+// =================== Функція, що очищує інпут =========
+
+function simpleInputCleaning() {
+  const searchInput = document.querySelector('.exersizes-input');
+  searchInput.value = '';
+}
+
+// clearInput();
