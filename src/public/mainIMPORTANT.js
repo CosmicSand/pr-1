@@ -163,48 +163,26 @@ async function paginationFetch(filterType, filterSubType, page) {
 
 // ========================== Пошук вправи за назвою ==========================
 
-async function searchByName(e) {
-  e.preventDefault();
-  console.log(e.target.nodeName);
-  console.log(e.currentTarget.nodeName);
-  if (e.target.nodeName !== 'BUTTON') {
-    return;
-  }
-
-  // const searchQuery = document.querySelector('.exersizes-input').value.trim();
-  // const page = document
-  //   .querySelector('.exersizes-pagination-item-active')
-  //   .textContent.trim();
-  // const filterType = sessionStorage.getItem('filterType').slice(1, -1);
-  // const filterSubType = sessionStorage.getItem('filterSubType').slice(1, -1);
-
-  // try {
-  //   if (searchQuery.length === 0) {
-  //     throw new Error('Nthing to search...');
-  //   } else {
-  //     const response = await axios.get('/exercises', {
-  //       params: keyGen(filterType, filterSubType, page, searchQuery),
-  //     });
-  //     if (response.data.results.length === 0) {
-  //       throw new Error('No results found...');
-  //     }
-  //     renderExersizesCard(response);
-  //   }
-  // } catch (error) {
-  //   console.log(error);
-  //   renderMessage();
-  // }
-
-  // try {
-  //   if (response.data.results.length === 0) {
-  //     throw new Error('No results found...');
-  //   }
-  //   renderExersizesCard(response);
-  // } catch (error) {
-  //   console.log(error);
-  //   renderMessage();
-  // }
-}
+// async function searchByName(e) {
+//   const searchQuery = e.target.value.trim();
+//   const page = document
+//     .querySelector('.exersizes-pagination-item-active')
+//     .textContent.trim();
+//   const filterType = sessionStorage.getItem('filterType').slice(1, -1);
+//   const filterSubType = sessionStorage.getItem('filterSubType').slice(1, -1);
+//   const response = await axios.get('/exercises', {
+//     params: keyGen(filterType, filterSubType, page, searchQuery),
+//   });
+//   try {
+//     if (response.data.results.length === 0) {
+//       throw new Error('No results found...');
+//     }
+//     renderExersizesCard(response);
+//   } catch (error) {
+//     console.log(error);
+//     renderMessage();
+//   }
+// }
 
 //  ===================== Вставлення карток по фільтру =====================
 
@@ -373,9 +351,9 @@ function keyGen(filterType, filterSubType, page, searchQuery) {
     limit: 12,
   };
 
-  if (searchQuery) {
-    config.keyword = searchQuery;
-  }
+  // if (searchQuery) {
+  //   config.keyword = searchQuery;
+  // }
 
   if (filterType && !filterSubType) {
     config.filter = filterType;
@@ -470,17 +448,13 @@ scrollToTopShowOrHide();
 // =================== Функція, що робить пошук видимим =========
 
 function inputVisualisationAddListeners() {
-  const divLister = document.querySelector('.exersizes-input-container');
   const searchInput = document.querySelector('.exersizes-input');
-  const searchBtn = document.querySelector('.exersizes-input-btn-s');
+  const searchBtn = document.querySelector('.exersizes-input-btn');
   const inputContainer = document.querySelector('.exersizes-input-container');
   const clearBtn = document.querySelector('.exersizes-input-btn');
   inputContainer.classList.remove('visually-hidden');
   searchInput.addEventListener('input', showClearBtnAndCleaning);
-  searchBtn.addEventListener('click', event => {
-    searchByName(event);
-  });
-  // searchBtn.addEventListener('click', searchByName(event));
+  // searchBtn.addEventListener('click', searchByName);
 }
 
 // =================== Функція, що очищує пошук ===================
@@ -502,13 +476,12 @@ function showClearBtnAndCleaning() {
 
 function inputHidingAndRemoveListeners() {
   const searchInput = document.querySelector('.exersizes-input');
-  const searchBtn = document.querySelector('.exersizes-input-btn-s');
+  const searchBtn = document.querySelector('.exersizes-input-btn');
   const inputContainer = document.querySelector('.exersizes-input-container');
   const clearBtn = document.querySelector('.exersizes-input-btn');
 
   searchInput.removeEventListener('input', showClearBtnAndCleaning);
-  searchInput.removeEventListener('click', searchByName(event));
-  // searchBtn.removeEventListener('click', searchByName(event));
+  // searchBtn.removeEventListener('click', searchByName);
   inputContainer.classList.add('visually-hidden');
   clearBtn.classList.add('visually-hidden');
 }
