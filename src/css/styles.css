@@ -81,10 +81,6 @@ address {
   text-decoration: none;
 }
 
-.list {
-  list-style-type: none;
-}
-
 .hidden {
   display: none;
 }
@@ -101,17 +97,86 @@ address {
   clip: rect(0 0 0 0);
   overflow: hidden;
 }
-/* ======================= Effects ============================== */
-.exersizes-result-card-container {
+/* ======================= Effects first ============================== */
+
+.first-filter {
+  position: relative;
+  border-radius: 12px;
+  transition: opacity 0.2s ease-in-out, scale 0.2s ease-in-out;
 }
 
-.first-filter:hover {
+.first-filter:hover,
+.first-filter:focus {
+  scale: 1.05;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.25), 0px 4px 10px rgba(0, 0, 0, 0.25),
+    0px 4px 10px rgba(0, 0, 0, 0.25);
+}
+
+.first-filter:hover ~ .first-filter,
+.first-filter:focus ~ .first-filter {
+  opacity: 0.85;
+  scale: 0.95;
+}
+/* ======================== Effects second ==================== */
+.second-filter {
+  position: relative;
+  border-radius: 12px;
+  transition: opacity 0.5s ease-in-out, scale 0.5s ease-in-out;
+}
+
+.second-filter:hover,
+.second-filter:focus {
   scale: 1.05;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.25);
 }
-.first-filter:hover ~ .first-filter {
+
+.second-filter:hover ~ .second-filter,
+.second-filter:focus ~ .second-filter {
   opacity: 0.85;
   scale: 0.95;
+}
+
+.second-filter:hover ~ .second-filter > .exersizes-card {
+  background-color: #f6f6f6;
+}
+
+.exersizes-menu-btn {
+  transition: box-shadow 0.3s ease-in-out;
+}
+
+.exersizes-menu-btn:hover,
+.exersizes-menu-btn:focus {
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.25);
+}
+
+.exersizes-input {
+  transition: box-shadow 0.3s ease-in-out;
+}
+
+.exersizes-input:hover,
+.exersizes-input:focus {
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.25);
+}
+.exersizes-card-btn {
+  transition: scale 0.3s ease-in-out;
+}
+
+.exersizes-card-btn:hover,
+.exersizes-card-btn:focus {
+  scale: 1.05;
+}
+.exersizes-input-btn-s {
+  transition: scale 0.3s ease-in-out;
+}
+.exersizes-input-btn-s:hover,
+.exersizes-input-btn-s:focus {
+  scale: 1.1;
+}
+
+/* ======================================================== */
+
+.exersizes-cards-container + .first-filter:hover {
+  background-color: #eea10c;
 }
 
 /* ======================== UP button =========================== */
@@ -1125,5 +1190,9 @@ html {
 
   .noresult-message {
     max-width: 684px;
+  }
+  .up-link {
+    width: 100px;
+    height: 100px;
   }
 }

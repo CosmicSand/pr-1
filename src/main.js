@@ -2,6 +2,8 @@ import axios from 'axios';
 
 axios.defaults.baseURL = 'https://energyflow.b.goit.study/api';
 
+scrollToTopShowOrHide();
+
 const FILTER_IMG_CONTAINER = document.querySelector(
   '.exersizes-cards-container'
 );
@@ -471,8 +473,6 @@ function scrollToTopShowOrHide() {
     document.querySelector('.up-link').classList.remove('show');
   }
 }
-
-scrollToTopShowOrHide();
 
 // =================== Функція, що робить пошук видимим =========
 
