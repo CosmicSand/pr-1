@@ -22,7 +22,6 @@ const dash = document.querySelector('.dash');
 const exerciseName = document.querySelector('.exercise-name');
 
 const page = 1;
-let filterType;
 
 const filterListener = document.querySelector('.exersizes-list');
 const paginationListener = document.querySelector('.exersizes-pagination-list');
@@ -40,7 +39,6 @@ filterListener.addEventListener('click', e => {
     return;
   } else {
     const filterType = e.target.textContent.trim();
-    console.log(e.target.dataset);
     sessionStorage.clear();
     sessionStorage.setItem('filterType', JSON.stringify(filterType));
     filterFetch(filterType);
@@ -55,21 +53,17 @@ filterListener.addEventListener('click', e => {
 
 FILTER_IMG_CONTAINER.addEventListener('click', e => {
   e.preventDefault();
-  if (
-    e.target.nodeName !== 'DIV' &&
-    e.target.nodeName !== 'H3' &&
-    e.target.nodeName !== 'P'
-  ) {
+  if (e.target.nodeName !== 'DIV') {
     return;
   }
-
   showExerciseName(e);
   inputVisualisationAddListener();
 
-  const filterType = e.target.dataset.filter.trim();
-  console.log(e.target.dataset.filter);
-  const filterSubType = e.target.dataset.target;
-  console.log(filterSubType);
+  const filterType = document
+    .querySelector('.exersizes-menu-btn-active')
+    .textContent.trim();
+
+  const filterSubType = exerciseName.textContent.toLowerCase().trim();
   fetchExersizes(filterType, filterSubType, page);
 
   sessionStorage.setItem('filterSubType', JSON.stringify(filterSubType));
@@ -124,10 +118,8 @@ async function filterFetch(filterType, filterSubType, page) {
       'previouParams',
       JSON.stringify(response.config.params)
     );
-    console.log(response.data.results);
-    filterType = response.data.results[0].filter;
     renderFilterImg(response);
-    // console.log(response);
+    console.log(response);
     pagination(response);
   } catch (error) {
     renderMessage();
@@ -152,11 +144,11 @@ async function fetchExersizes(filterType, filterSubType, page) {
       pagination(response);
     }
 
-    // console.log(response);
+    console.log(response);
   } catch (error) {
     renderMessage();
   }
-  // console.log(response.data);
+  console.log(response.data);
 }
 
 // =========================== Запит вправ по пагінації ===========================
@@ -181,21 +173,15 @@ async function renderFilterImg(resp) {
   FILTER_IMG_CONTAINER.innerHTML = '';
   const markup = results
     .map(el => {
-      const filter = el.filter;
-      const target = el.name;
       return `<div class="exersizes-card-bytype" style="background: linear-gradient(
     0deg,
     rgba(16, 16, 16, 0.7) 0%,
     rgba(16, 16, 16, 0.7) 100%
-  ), url(${
-    el.imgUrl
-  }) center center no-repeat; background-size: cover;" data-filter="${filter}" data-target="${target}">
-        <h3 class="exersizes-card-bytype-header" data-filter="${filter}" data-target="${target}">
+  ), url(${el.imgUrl}) center center no-repeat; background-size: cover;">
+        <h3 class="exersizes-card-bytype-header">
           ${el.name[0].toUpperCase() + el.name.slice(1)}
         </h3>
-        <p class="exersizes-card-bytype-text" data-filter="${filter}" data-target="${target}">${
-        el.filter
-      }</p>
+        <p class="exersizes-card-bytype-text">${el.filter}</p>
       </div>`;
     })
     .join('');
@@ -212,10 +198,12 @@ function renderExersizesCard(resp) {
   EXERCISES_CARD_CONTAINER.innerHTML = '';
   let id;
   const markup = results
-    .map(el => {
+    .map((el, i, ar) => {
       let exerciseName = el.name;
       id = el._id;
       const viewPortWidth = window.innerWidth;
+
+      console.log(viewPortWidth);
 
       if (viewPortWidth >= 1440) {
         if (exerciseName.length > 25) {
@@ -319,7 +307,7 @@ function showExerciseName(e) {
   dash.classList.remove('visually-hidden');
   exerciseName.classList.remove('visually-hidden');
 
-  exerciseName.textContent = e.target.dataset.target.trim();
+  exerciseName.textContent = e.target.firstElementChild.textContent.trim();
 }
 
 // =========================== Видалення тексту вправи ===========================
