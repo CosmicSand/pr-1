@@ -137,12 +137,8 @@ async function fetchExersizes(filterType, filterSubType, page) {
     if (response.data.results.length === 0) {
       throw new Error('No results found...');
     }
-    sessionStorage.clear();
-    sessionStorage.setItem(
-      'previouParams',
-      JSON.stringify(response.config.params)
-    );
 
+    console.log(response.data.results[0]._id);
     renderExersizesCard(response);
     if (page === 1) {
       pagination(response);
@@ -200,9 +196,11 @@ function renderExersizesCard(resp) {
   FILTER_IMG_CONTAINER.classList.add('visually-hidden');
   MESSAGE_CONTAINER.classList.add('visually-hidden');
   EXERCISES_CARD_CONTAINER.innerHTML = '';
+  let id;
   const markup = results
-    .map(el => {
+    .map((el, i, ar) => {
       let exerciseName = el.name;
+      id = el._id;
       const viewPortWidth = window.innerWidth;
 
       console.log(viewPortWidth);
