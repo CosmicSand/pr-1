@@ -40,18 +40,16 @@ filterListener.addEventListener('click', e => {
     return;
   } else {
     const filterType = e.target.textContent.trim();
-    console.log(filterType);
     console.log(e.target.dataset);
     sessionStorage.clear();
     sessionStorage.setItem('filterType', JSON.stringify(filterType));
     filterFetch(filterType);
     exerciseNameHiding();
     inputHidingAndRemoveListeners();
+
     changeFilterBtnStyle(e);
   }
 });
-
-console.log(filterListener.addEventListener);
 
 // ============ Запуск фільтрації при кліку на загальну картку ============
 
@@ -66,6 +64,7 @@ FILTER_IMG_CONTAINER.addEventListener('click', e => {
   }
 
   const filterType = e.target.dataset.filter;
+
   const filterSubType = e.target.dataset.target;
 
   fetchExersizes(filterType, filterSubType, page);
@@ -95,6 +94,7 @@ PAGINATION_CONTAINER.addEventListener('click', e => {
     }
 
     paginationFetch(filterType, filterSubType, page);
+
     changingPaginationBtnStyle(e);
   }
 });
@@ -111,10 +111,11 @@ async function filterFetch(filterType, filterSubType, page) {
       throw new Error('No results found...');
     }
 
-    // sessionStorage.clear();
-    // sessionStorage.setItem(
-    //   'previouParams',
-    //   JSON.stringify(response.config.params));
+    sessionStorage.clear();
+    sessionStorage.setItem(
+      'previouParams',
+      JSON.stringify(response.config.params)
+    );
     console.log(response.data.results);
     filterType = response.data.results[0].filter;
     renderFilterImg(response);
@@ -163,12 +164,12 @@ async function paginationFetch(filterType, filterSubType, page) {
 // ========================== Пошук вправи за назвою input ==========================
 
 async function searchByName(e) {
-  if (e.target.nodeName !== 'BUTTON' && e.keyCode !== 13) {
-    console.log(e);
-    console.log(KeyboardEvent);
+  e.preventDefault();
+  console.log(e.target.nodeName);
+  console.log(e.currentTarget.nodeName);
+  if (e.target.nodeName !== 'BUTTON') {
     return;
   }
-  console.log('cool');
 
   const searchQuery = document
     .querySelector('.exersizes-input')
@@ -480,36 +481,24 @@ function inputVisualisationAddListeners() {
   const inputContainer = document.querySelector('.exersizes-input-container');
   const clearBtn = document.querySelector('.exersizes-input-btn');
   inputContainer.classList.remove('visually-hidden');
-  searchInput.addEventListener('keyup', submitShowHideClean);
-  searchBtn.addEventListener('click', searchByName);
-
-  // searchBtn.addEventListener('click', searchByName);
+  searchInput.addEventListener('input', showClearBtnAndCleaning);
+  searchBtn.addEventListener('click', event => {
+    searchByName(event);
+  });
+  // searchBtn.addEventListener('click', searchByName(event));
 }
 
-// =================== Відправка за Ентером, показ/ховання хрестика та  чищення ===================
-function submitShowHideClean(e) {
-  const searchBtn = document.querySelector('.exersizes-input-btn-s');
-  const inputContainer = document.querySelector('.exersizes-input-container');
-  const clearBtn = document.querySelector('.exersizes-input-btn');
-
-  clearBtn.classList.remove('visually-hidden');
-  if (e.keyCode === 13) {
-    console.log('ffdfdf');
-    searchByName(e);
-    simpleInputCleaning();
-    clearBtn.classList.add('visually-hidden');
-  }
-  console.log(e.target);
-}
-
-// =================== Функція очищення пошуку  Функція зверху замінює ===================
+// =================== Функція, що очищує пошук ===================
 
 function showClearBtnAndCleaning() {
+  const searchInput = document.querySelector('.exersizes-input');
+
   const clearBtn = document.querySelector('.exersizes-input-btn');
   clearBtn.classList.remove('visually-hidden');
   const cleaning = e => {
     e.preventDefault();
-    simpleInputCleaning();
+    console.log(searchInput.value);
+    searchInput.value = '';
     clearBtn.classList.add('visually-hidden');
   };
   clearBtn.addEventListener('click', cleaning);
@@ -524,8 +513,8 @@ function inputHidingAndRemoveListeners() {
   const clearBtn = document.querySelector('.exersizes-input-btn');
 
   searchInput.removeEventListener('input', showClearBtnAndCleaning);
-  searchInput.removeEventListener('click', searchByName);
-  // searchBtn.removeEventListener('click', searchByName);
+  searchInput.removeEventListener('click', searchByName(event));
+  // searchBtn.removeEventListener('click', searchByName(event));
   inputContainer.classList.add('visually-hidden');
   clearBtn.classList.add('visually-hidden');
 }

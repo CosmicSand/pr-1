@@ -105,18 +105,34 @@ address {
   transition: opacity 0.2s ease-in-out, scale 0.2s ease-in-out;
 }
 
-.first-filter:hover,
-.first-filter:focus {
-  scale: 1.05;
+.exersizes-card-bytype:hover,
+.exersizes-card-bytype:focus {
+  scale: 1.03;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.25), 0px 4px 10px rgba(0, 0, 0, 0.25),
     0px 4px 10px rgba(0, 0, 0, 0.25);
 }
 
-.first-filter:hover ~ .first-filter,
+.exersizes-card-bytype {
+  transition: scale 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+/* .first-filter:hover ~ .first-filter,
 .first-filter:focus ~ .first-filter {
   opacity: 0.85;
   scale: 0.95;
+} */
+
+/* .first-filter:hover .first-filter:not(.first-filter:hover),
+.first-filter:focus .first-filter {
+  opacity: 0.85;
+  scale: 0.95;
 }
+
+.first-filter:hover :nth-child(n) {
+  opacity: 0.85;
+  scale: 0.9;
+} */
+
 /* ======================== Effects second ==================== */
 .second-filter {
   position: relative;
@@ -130,7 +146,7 @@ address {
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.25);
 }
 
-.second-filter:hover ~ .second-filter,
+/* .second-filter:hover ~ .second-filter,
 .second-filter:focus ~ .second-filter {
   opacity: 0.85;
   scale: 0.95;
@@ -138,10 +154,17 @@ address {
 
 .second-filter:hover ~ .second-filter > .exersizes-card {
   background-color: #f6f6f6;
-}
+} */
 
 .exersizes-menu-btn {
   transition: box-shadow 0.3s ease-in-out;
+}
+.exercise-name {
+  font-size: 20px;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  text-transform: capitalize;
+  color: rgba(27, 27, 27, 0.5);
 }
 
 .exersizes-menu-btn:hover,
@@ -223,6 +246,9 @@ html {
 }
 .up-svg {
   display: block;
+  position: absolute;
+  top: 10%;
+  left: 10%;
   margin: 0 auto;
   fill: #fafafa;
   opacity: 0.85;
@@ -244,6 +270,7 @@ html {
   border-radius: 30px;
   margin-left: auto;
   margin-right: auto;
+  min-height: 760px;
 }
 
 .exersizes-header {
@@ -461,7 +488,7 @@ html {
 .exersizes-pagination-list {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   flex-wrap: wrap;
   column-gap: 3px;
   row-gap: 5px;
@@ -1035,6 +1062,7 @@ html {
     padding-right: 48px;
     padding-bottom: 64px;
     border-radius: 50px;
+    min-height: 1091px;
   }
 
   .exersizes-header {
@@ -1194,5 +1222,20 @@ html {
   .up-link {
     width: 100px;
     height: 100px;
+  }
+  .up-svg {
+    width: 80px;
+    height: 80px;
+  }
+  .exersizes-container {
+    padding-top: 64px;
+    padding-bottom: 64px;
+    padding-left: 48px;
+    padding-right: 48px;
+    background-color: var(--dark-white);
+    border-radius: 30px;
+    margin-left: auto;
+    margin-right: auto;
+    min-height: 827px;
   }
 }
