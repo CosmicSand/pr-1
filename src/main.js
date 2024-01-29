@@ -164,8 +164,6 @@ async function paginationFetch(filterType, filterSubType, page) {
 
 async function searchByName(e) {
   if (e.target.nodeName !== 'BUTTON' && e.keyCode !== 13) {
-    console.log(e);
-    console.log(KeyboardEvent);
     return;
   }
   console.log('cool');
@@ -174,9 +172,6 @@ async function searchByName(e) {
     .querySelector('.exersizes-input')
     .value.trim()
     .toLowerCase();
-  // const page = document
-  //   .querySelector('.exersizes-pagination-item-active')
-  //   .textContent.trim();
 
   console.log(sessionStorage.getItem('filterSubType'));
   const filterType = sessionStorage.getItem('filterType').slice(1, -1);
@@ -200,16 +195,6 @@ async function searchByName(e) {
     console.log(error);
     renderMessage();
   }
-
-  // try {
-  //   if (response.data.results.length === 0) {
-  //     throw new Error('No results found...');
-  //   }
-  //   renderExersizesCard(response);
-  // } catch (error) {
-  //   console.log(error);
-  //   renderMessage();
-  // }
 }
 
 //  ===================== Вставлення карток по фільтру =====================
@@ -274,12 +259,6 @@ function renderExersizesCard(resp) {
         console.log('320');
       }
 
-      // if (exerciseName.length > 17) {
-      //   exerciseName =
-      //     el.name[0].toUpperCase() + el.name.slice(1, 17).trim() + '...';
-      // } else {
-      //   exerciseName = el.name[0].toUpperCase() + el.name.slice(1);
-      // }
       return `        <li class="second-filter"><div class="exersizes-card" tabindex="0">
     <div class="exersizes-card-header-cont">
         <div class="exersizes-card-workout-cont">
@@ -332,11 +311,13 @@ function renderExersizesCard(resp) {
 
 // =========================== Виведення повідомлення ===========================
 
-async function renderMessage() {
+async function renderMessage(error) {
   FILTER_IMG_CONTAINER.classList.add('visually-hidden');
   EXERCISES_CARD_CONTAINER.classList.add('visually-hidden');
-
   MESSAGE_CONTAINER.classList.remove('visually-hidden');
+  const paginationList = document.querySelector('.exersizes-pagination-list');
+  paginationList.innerHTML = '';
+
   MESSAGE_CONTAINER.innerHTML = '';
   const markupMessage = `<p class="noresult-message" >Unfortunately, <em class="span-strong">no results</em> were found. You may want to consider other search options to find the exercise you are looking for. Our range is wide and you have the opportunity to find more options that suit your needs.</p>`;
 
@@ -408,10 +389,15 @@ function keyGen(filterType, filterSubType, page, searchQuery) {
 
 // =========================== Pagination ===========================
 
-async function pagination(resp) {
+async function pagination(resp, error) {
   let paginationElements = '';
-  const pagesQuantity = resp.data.totalPages;
   const paginationList = document.querySelector('.exersizes-pagination-list');
+  if (error) {
+    paginationList.innerHTML = '';
+    return;
+  }
+
+  const pagesQuantity = resp.data.totalPages;
   paginationList.innerHTML = '';
   if (pagesQuantity > 1) {
     for (let i = 1; i <= pagesQuantity; i++) {
@@ -474,7 +460,7 @@ function scrollToTopShowOrHide() {
 // =================== Функція, що робить пошук видимим =========
 
 function inputVisualisationAddListeners() {
-  const divLister = document.querySelector('.exersizes-input-container');
+  // const divLister = document.querySelector('.exersizes-input-container');
   const searchInput = document.querySelector('.exersizes-input');
   const searchBtn = document.querySelector('.exersizes-input-btn-s');
   const inputContainer = document.querySelector('.exersizes-input-container');
@@ -488,18 +474,17 @@ function inputVisualisationAddListeners() {
 
 // =================== Відправка за Ентером, показ/ховання хрестика та  чищення ===================
 function submitShowHideClean(e) {
-  const searchBtn = document.querySelector('.exersizes-input-btn-s');
-  const inputContainer = document.querySelector('.exersizes-input-container');
   const clearBtn = document.querySelector('.exersizes-input-btn');
-
   clearBtn.classList.remove('visually-hidden');
+  if (e.target.value.trim().length > 0) {
+    clearBtn.classList.remove('visually-hidden');
+    clearBtn.addEventListener('click', simpleInputCleaning);
+  }
   if (e.keyCode === 13) {
-    console.log('ffdfdf');
     searchByName(e);
     simpleInputCleaning();
     clearBtn.classList.add('visually-hidden');
   }
-  console.log(e.target);
 }
 
 // =================== Функція очищення пошуку  Функція зверху замінює ===================
@@ -552,7 +537,10 @@ function cleanInput() {
 
 function simpleInputCleaning() {
   const searchInput = document.querySelector('.exersizes-input');
+  const clearBtn = document.querySelector('.exersizes-input-btn');
   searchInput.value = '';
+  clearBtn.classList.add('visually-hidden');
+  clearBtn.removeEventListener('click', simpleInputCleaning);
 }
 
 // clearInput();

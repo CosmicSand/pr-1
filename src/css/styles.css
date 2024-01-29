@@ -1026,6 +1026,7 @@ html {
   .exersizes-result-card-container {
     flex-direction: row;
     justify-content: center;
+    align-items: flex-start;
     flex-wrap: wrap;
     row-gap: 20px;
     column-gap: 14px;
@@ -1184,6 +1185,7 @@ html {
     row-gap: 28px;
     column-gap: 20px;
     padding-top: 32px;
+    min-height: 715px;
   }
 
   .exersizes-cards-container {
