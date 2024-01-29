@@ -40,8 +40,6 @@ filterListener.addEventListener('click', e => {
     return;
   } else {
     const filterType = e.target.textContent.trim();
-    console.log(filterType);
-    console.log(e.target.dataset);
     sessionStorage.clear();
     sessionStorage.setItem('filterType', JSON.stringify(filterType));
     filterFetch(filterType);
@@ -50,8 +48,6 @@ filterListener.addEventListener('click', e => {
     changeFilterBtnStyle(e);
   }
 });
-
-console.log(filterListener.addEventListener);
 
 // ============ Запуск фільтрації при кліку на загальну картку ============
 
@@ -99,7 +95,7 @@ PAGINATION_CONTAINER.addEventListener('click', e => {
   }
 });
 
-//  ===================== Запрос по фільтру  =====================
+//  ===================== Запит по фільтру  =====================
 
 async function filterFetch(filterType, filterSubType, page) {
   const response = await axios.get('/filters', {
@@ -110,15 +106,8 @@ async function filterFetch(filterType, filterSubType, page) {
     if (response.data.results.length === 0) {
       throw new Error('No results found...');
     }
-
-    // sessionStorage.clear();
-    // sessionStorage.setItem(
-    //   'previouParams',
-    //   JSON.stringify(response.config.params));
-    console.log(response.data.results);
     filterType = response.data.results[0].filter;
     renderFilterImg(response);
-    // console.log(response);
     pagination(response);
   } catch (error) {
     renderMessage();
@@ -140,12 +129,9 @@ async function fetchExersizes(filterType, filterSubType, page) {
     if (page === 1) {
       pagination(response);
     }
-
-    // console.log(response);
   } catch (error) {
     renderMessage();
   }
-  // console.log(response.data);
 }
 
 // =========================== Запит вправ по пагінації ===========================
@@ -513,24 +499,6 @@ function inputHidingAndRemoveListeners() {
   // searchBtn.removeEventListener('click', searchByName);
   inputContainer.classList.add('visually-hidden');
   clearBtn.classList.add('visually-hidden');
-}
-
-// =================== Функція, що очищує інпут =========
-
-function cleanInput() {
-  const inputContainer = document.querySelector('.exersizes-input-container');
-
-  const clearBtn = document.querySelector('.exersizes-input-btn');
-
-  if (!clearBtn.classList.contains('visually-hidden')) {
-    const cleaning = () => {
-      e.preventDefault();
-      inputContainer.value = '';
-      clearBtn.classList.add('visually-hidden');
-    };
-    clearBtn.addEventListener('click', cleaning);
-    clearBtn.removeEventListener('click', cleaning);
-  }
 }
 
 // =================== Функція, що очищує інпут =========
