@@ -115,27 +115,49 @@ address {
 .exersizes-card-bytype {
   transition: scale 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
 }
-
-/* .first-filter:hover ~ .first-filter,
-.first-filter:focus ~ .first-filter {
-  opacity: 0.85;
-  scale: 0.95;
-} */
-
-/* .first-filter:hover .first-filter:not(.first-filter:hover),
-.first-filter:focus .first-filter {
-  opacity: 0.85;
-  scale: 0.95;
+.loader {
+  width: 48px;
+  height: 48px;
+  display: inline-block;
+  position: absolute;
+  /* left: 50%;
+  top: 50%;
+  transform: translate(-50%, 265%); */
+}
+.loader::after,
+.loader::before {
+  content: '';
+  box-sizing: border-box;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 2px solid var(--primary-color);
+  position: absolute;
+  left: 0;
+  top: 0;
+  animation: animloader 2s linear infinite;
+}
+.loader::after {
+  animation-delay: 1s;
+}
+.exersizes-header {
+  position: relative;
 }
 
-.first-filter:hover :nth-child(n) {
-  opacity: 0.85;
-  scale: 0.9;
-} */
+@keyframes animloader {
+  0% {
+    transform: scale(0);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0;
+  }
+}
 
 /* ======================== Effects second ==================== */
 .second-filter {
-  position: relative;
+  /* position: relative; */
   border-radius: 12px;
   transition: opacity 0.5s ease-in-out, scale 0.5s ease-in-out;
 }
@@ -145,16 +167,6 @@ address {
   scale: 1.05;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.25);
 }
-
-/* .second-filter:hover ~ .second-filter,
-.second-filter:focus ~ .second-filter {
-  opacity: 0.85;
-  scale: 0.95;
-}
-
-.second-filter:hover ~ .second-filter > .exersizes-card {
-  background-color: #f6f6f6;
-} */
 
 .exersizes-menu-btn {
   transition: box-shadow 0.3s ease-in-out;
@@ -192,14 +204,11 @@ address {
   transition: scale 0.3s ease-in-out;
 }
 .exersizes-input-btn-s:hover,
-.exersizes-input-btn-s:focus {
+.exersizes-input-btn-s:focus,
+.exersizes-input-btn-s:active {
   scale: 1.1;
-}
-
-/* ======================================================== */
-
-.exersizes-cards-container + .first-filter:hover {
-  background-color: #eea10c;
+  background-color: transparent;
+  outline: none;
 }
 
 /* ======================== UP button =========================== */
@@ -352,9 +361,7 @@ html {
 }
 .exersizes-input-btn {
   width: fit-content;
-  position: absolute;
-  right: 20px;
-  height: 18px;
+  position: relative;
   border: none;
   padding: 0;
   margin: 0;
@@ -368,15 +375,13 @@ html {
 }
 .exersizes-input-btn-s {
   width: fit-content;
-  position: absolute;
-  height: 45px;
-  width: 18px;
-  right: -4px;
+  position: relative;
+  width: fit-content;
   transform: translateY(6%);
   border: none;
   padding: 0;
   margin: 0;
-  z-index: 999;
+  z-index: 1;
   background-color: transparent;
   fill: transparent;
   stroke: var(--primary-color);
@@ -646,6 +651,32 @@ html {
     padding-left: 16px;
     padding-right: 16px;
   }
+
+  .loader {
+    width: 48px;
+    height: 48px;
+    display: inline-block;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+  .loader::after,
+  .loader::before {
+    content: '';
+    box-sizing: border-box;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    border: 2px solid var(--primary-color);
+    position: absolute;
+    left: 0;
+    top: 0;
+    animation: animloader 2s linear infinite;
+  }
+  .loader::after {
+    animation-delay: 1s;
+  }
   /* ======================= */
   .exersizes-header-filter-cont {
     flex-direction: row;
@@ -821,7 +852,6 @@ html {
     row-gap: 28px;
     column-gap: 20px;
     padding-top: 32px;
-    min-height: 715px;
   }
 
   .exersizes-cards-container {
@@ -875,5 +905,6 @@ html {
     margin-left: auto;
     margin-right: auto;
     min-height: 827px;
+    width: 100%;
   }
 }
