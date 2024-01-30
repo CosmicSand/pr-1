@@ -17,7 +17,9 @@ const MESSAGE_CONTAINER = document.querySelector(
 const PAGINATION_CONTAINER = document.querySelector(
   '.exersizes-pagination-container'
 );
-
+const inputContainer = document.querySelector('.exersizes-input-container');
+const clearBtn = document.querySelector('.exersizes-input-btn');
+const searchBtn = document.querySelector('.exersizes-input-btn-s');
 const dash = document.querySelector('.dash');
 const exerciseName = document.querySelector('.exercise-name');
 
@@ -207,9 +209,9 @@ async function searchByName(e) {
 
 async function renderFilterImg(resp) {
   const results = resp.data.results;
-  FILTER_IMG_CONTAINER.classList.remove('visually-hidden');
-  EXERCISES_CARD_CONTAINER.classList.add('visually-hidden');
-  MESSAGE_CONTAINER.classList.add('visually-hidden');
+  FILTER_IMG_CONTAINER.classList.remove('hidden');
+  EXERCISES_CARD_CONTAINER.classList.add('hidden');
+  MESSAGE_CONTAINER.classList.add('hidden');
 
   FILTER_IMG_CONTAINER.innerHTML = '';
   const markup = results
@@ -247,15 +249,16 @@ function choseByEnter(e) {
 function renderExersizesCard(resp) {
   const results = resp.data.results;
   FILTER_IMG_CONTAINER.removeEventListener('keyup', choseByEnter);
-  EXERCISES_CARD_CONTAINER.classList.remove('visually-hidden');
-  FILTER_IMG_CONTAINER.classList.add('visually-hidden');
-  MESSAGE_CONTAINER.classList.add('visually-hidden');
+  EXERCISES_CARD_CONTAINER.classList.remove('hidden');
+  FILTER_IMG_CONTAINER.classList.add('hidden');
+  MESSAGE_CONTAINER.classList.add('hidden');
   FILTER_IMG_CONTAINER.removeEventListener('keyup', choseByEnter);
   EXERCISES_CARD_CONTAINER.innerHTML = '';
   let id;
   const markup = results
     .map(el => {
       let exerciseName = el.name;
+      console.log(exerciseName);
       id = el._id;
       const viewPortWidth = window.innerWidth;
 
@@ -329,9 +332,9 @@ function renderExersizesCard(resp) {
 // =========================== Виведення повідомлення ===========================
 
 async function renderMessage(error) {
-  FILTER_IMG_CONTAINER.classList.add('visually-hidden');
-  EXERCISES_CARD_CONTAINER.classList.add('visually-hidden');
-  MESSAGE_CONTAINER.classList.remove('visually-hidden');
+  FILTER_IMG_CONTAINER.classList.add('hidden');
+  EXERCISES_CARD_CONTAINER.classList.add('hidden');
+  MESSAGE_CONTAINER.classList.remove('hidden');
   const paginationList = document.querySelector('.exersizes-pagination-list');
   paginationList.innerHTML = '';
 
@@ -489,38 +492,33 @@ function scrollToTopShowOrHide() {
 function inputVisualisationAddListeners() {
   // const divLister = document.querySelector('.exersizes-input-container');
   const searchInput = document.querySelector('.exersizes-input');
-  const searchBtn = document.querySelector('.exersizes-input-btn-s');
-  const inputContainer = document.querySelector('.exersizes-input-container');
-  const clearBtn = document.querySelector('.exersizes-input-btn');
-  inputContainer.classList.remove('visually-hidden');
+  inputContainer.classList.remove('hidden');
   searchInput.addEventListener('keyup', submitShowHideClean);
   searchBtn.addEventListener('click', searchByName);
 }
 
 // =================== Відправка за Ентером, показ/ховання хрестика та  чищення ===================
 function submitShowHideClean(e) {
-  const clearBtn = document.querySelector('.exersizes-input-btn');
-  clearBtn.classList.remove('visually-hidden');
+  clearBtn.classList.remove('hidden');
   if (e.target.value.trim().length > 0) {
-    clearBtn.classList.remove('visually-hidden');
+    clearBtn.classList.remove('hidden');
     clearBtn.addEventListener('click', simpleInputCleaning);
   }
   if (e.keyCode === 13) {
     searchByName(e);
     simpleInputCleaning();
-    clearBtn.classList.add('visually-hidden');
+    clearBtn.classList.add('hidden');
   }
 }
 
 // =================== Функція очищення пошуку  Функція зверху замінює ===================
 
 function showClearBtnAndCleaning() {
-  const clearBtn = document.querySelector('.exersizes-input-btn');
-  clearBtn.classList.remove('visually-hidden');
+  clearBtn.classList.remove('hidden');
   const cleaning = e => {
     e.preventDefault();
     simpleInputCleaning();
-    clearBtn.classList.add('visually-hidden');
+    clearBtn.classList.add('hidden');
   };
   clearBtn.addEventListener('click', cleaning);
 }
@@ -529,24 +527,18 @@ function showClearBtnAndCleaning() {
 
 function inputHidingAndRemoveListeners() {
   const searchInput = document.querySelector('.exersizes-input');
-  const searchBtn = document.querySelector('.exersizes-input-btn-s');
-  const inputContainer = document.querySelector('.exersizes-input-container');
-  const clearBtn = document.querySelector('.exersizes-input-btn');
-
   searchInput.removeEventListener('input', showClearBtnAndCleaning);
   searchInput.removeEventListener('click', searchByName);
-  // searchBtn.removeEventListener('click', searchByName);
-  inputContainer.classList.add('visually-hidden');
-  clearBtn.classList.add('visually-hidden');
+  inputContainer.classList.add('hidden');
+  clearBtn.classList.add('hidden');
 }
 
 // =================== Функція, що очищує інпут =========
 
 function simpleInputCleaning() {
   const searchInput = document.querySelector('.exersizes-input');
-  const clearBtn = document.querySelector('.exersizes-input-btn');
   searchInput.value = '';
-  clearBtn.classList.add('visually-hidden');
+  clearBtn.classList.add('hidden');
   clearBtn.removeEventListener('click', simpleInputCleaning);
 }
 // =================== Функція додавання спінера, стилю search-btn-disabled, змінення стану кнопки на відключено ===================
