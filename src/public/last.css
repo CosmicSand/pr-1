@@ -5,26 +5,6 @@
   |============================
 */
 
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap');
-
-:root {
-  --primary-color: #1b1b1b;
-  --secondary-color: #f6f6f6;
-  --yellow: #eea10c;
-  --grey: #7e847f;
-  --dark-grey: #5f6560;
-  --dark-white: #e8e8e8;
-  --white: #ffffff;
-}
-
-body {
-  font-family: 'DM Sans', sans-serif;
-  color: #f6f6f6;
-  background-color: #f6f6f6;
-  margin: 0;
-  padding: 0;
-}
-
 h1,
 h2,
 h3,
@@ -79,10 +59,6 @@ address {
 
 .link {
   text-decoration: none;
-}
-
-.hidden {
-  display: none;
 }
 
 .visually-hidden {
@@ -157,7 +133,7 @@ address {
 
 /* ======================== Effects second ==================== */
 .second-filter {
-  /* position: relative; */
+  position: relative;
   border-radius: 12px;
   transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
 }
@@ -207,38 +183,18 @@ address {
   transform: scale(1.05);
 }
 .exersizes-input-btn-s {
-  transition: scale 0.3s ease-in-out;
+  transition: transform 0.3s ease-in-out;
 }
 .exersizes-input-btn-s:hover,
-.exersizes-input-btn-s:focus,
-.exersizes-input-btn-s:active {
+.exersizes-input-btn-s:focus {
   transform: scale(1.1);
-  background-color: transparent;
-  outline: none;
 }
+
+/* ======================================================== */
 
 /* ======================== UP button =========================== */
 html {
   scroll-behavior: smooth;
-}
-
-.container {
-  width: 375px;
-  margin-top: 0px;
-  margin-bottom: 0px;
-  margin-left: auto;
-  margin-right: auto;
-  padding-top: 20px;
-  padding-bottom: 20px;
-  padding-left: 20px;
-  padding-right: 20px;
-}
-.space {
-  height: 500px;
-}
-
-.up {
-  width: 100%;
 }
 
 .up-link {
@@ -249,7 +205,6 @@ html {
   height: 40px;
   right: 16px;
   bottom: 16px;
-  /* width: fit-content; */
   border-radius: 50%;
   opacity: 0.6;
   background-color: var(--grey);
@@ -265,13 +220,9 @@ html {
   background-color: var(--dark-grey);
 }
 .up-svg {
-  /* position: absolute;
-  top: ;
-  left: 1%; */
   margin: 0 auto;
   fill: #fafafa;
   opacity: 0.85;
-  /* z-index: 999999999999; */
   transition: opacity 0.2s ease-in-out, transform 0.2s ease-in-out;
 }
 .up-svg:hover {
@@ -288,8 +239,6 @@ html {
   padding-right: 20px;
   background-color: var(--dark-white);
   border-radius: 30px;
-  margin-left: auto;
-  margin-right: auto;
   min-height: 760px;
 }
 
@@ -582,7 +531,6 @@ html {
 
 .exersizes-card-btn {
   display: flex;
-  position: relative;
   width: fit-content;
   align-items: center;
   column-gap: 8px;
@@ -593,7 +541,6 @@ html {
   line-height: 1.28;
   text-transform: capitalize;
   border: none;
-  z-index: 1;
 }
 
 .exersizes-card-btn-icon {
@@ -628,7 +575,6 @@ html {
 
 .exersizes-card-info-item {
   display: block;
-  text-overflow: ellipsis;
 }
 
 .exersizes-card-info-descr {
@@ -675,9 +621,6 @@ html {
 }
 
 @media (min-width: 375px) {
-  .container {
-    width: 375px;
-  }
   .exersizes-input {
     width: 295px;
   }
@@ -691,22 +634,6 @@ html {
 
 @media screen and (min-width: 768px) {
   /* ==================================== Загальні контейнери карток та повідомлення ========================================= */
-
-  .container {
-    width: 768px;
-    padding-left: 16px;
-    padding-right: 16px;
-  }
-  /* ================================NB================ */
-  .exersizes-result-card-container-wrapper {
-    min-height: 775px;
-  }
-
-  /* ========================= Test ================== */
-  .exersizes-cards-container-wrapper {
-    min-height: 1601px;
-  }
-  /* =================== Loader========================= */
 
   .loader {
     width: 48px;
@@ -734,6 +661,18 @@ html {
     animation-delay: 1s;
   }
   /* ======================= */
+
+  /* ================================NB================ */
+  .exersizes-result-card-container-wrapper {
+    min-height: 775px;
+  }
+
+  /* ================================================= */
+  .exersizes-cards-container-wrapper {
+    min-height: 1601px;
+  }
+  /* ================================================= */
+
   .exersizes-header-filter-cont {
     flex-direction: row;
     justify-content: space-between;
@@ -917,18 +856,6 @@ html {
 /* ======================================= Адаптація під десктоп ========================================= */
 
 @media screen and (min-width: 1440px) {
-  .container {
-    width: 1440px;
-  }
-  /* ================================NB================ */
-  .exersizes-result-card-container-wrapper {
-    min-height: 511px;
-  }
-
-  .exersizes-cards-container-wrapper {
-    min-height: 862px;
-  }
-  /* ================================================= */
   .exersizes-message-container {
     padding-top: 217px;
     height: 511px;
@@ -939,6 +866,16 @@ html {
     column-gap: 20px;
     padding-top: 32px;
   }
+
+  /* ===========================NB=================== */
+  .exersizes-result-card-container-wrapper {
+    min-height: 511px;
+  }
+
+  .exersizes-cards-container-wrapper {
+    min-height: 862px;
+  }
+  /* ================================================= */
 
   .exersizes-cards-container {
     row-gap: 40px;
@@ -956,25 +893,19 @@ html {
 
   .exersizes-card {
     width: 424px;
-    height: 141px;
     padding-left: 17px;
-    text-overflow: ellipsis;
   }
 
   .exersizes-card-title-h {
     font-size: 24px;
     line-height: 1.33;
   }
-  /* =============================== Test============ */
 
   .exersizes-card-info-list {
     column-gap: 16px;
-    /* row-gap: 16px; */
     justify-content: flex-start;
-    text-overflow: ellipsis;
-    flex-wrap: nowrap;
   }
-  /* =================================================== */
+
   .noresult-message {
     max-width: 684px;
   }
@@ -982,10 +913,10 @@ html {
     width: 50px;
     height: 50px;
   }
-  /* .up-svg {
+  .up-svg {
     width: 40px;
     height: 40px;
-  } */
+  }
   .exersizes-container {
     padding-top: 64px;
     padding-bottom: 64px;
@@ -993,12 +924,35 @@ html {
     padding-right: 48px;
     background-color: var(--dark-white);
     border-radius: 30px;
-    margin-left: auto;
-    margin-right: auto;
     min-height: 827px;
     width: 100%;
   }
+  .card-title-wrapper {
+    width: 350px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .card-title-last {
+    width: 350px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 
+  .just-wrapper {
+    display: flex;
+    column-gap: 8px;
+    text-align: left;
+    width: 392px;
+    overflow: hidden;
+    flex-wrap: nowrap;
+    padding-top: 8px;
+  }
+  .last {
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
   .card-title-wrapper {
     width: 350px;
     overflow: hidden;
@@ -1028,70 +982,4 @@ html {
 }
 .hidden {
   display: none;
-}
-.favorites-card {
-  padding-top: 64px;
-  padding-bottom: 64px;
-  padding-right: 16px;
-  width: 736px;
-  height: auto;
-}
-.new {
-  width: 100%;
-  padding-right: 24px;
-  padding-left: 48px;
-}
-.favorites-contanier-block {
-  padding-right: 0;
-  display: flex;
-  max-height: 720px;
-  justify-content: flex-start;
-  overflow-y: scroll;
-}
-
-.animation {
-  animation-name: appear;
-  animation-duration: 0.5s;
-  animation-timing-function: ease-in-out;
-}
-@keyframes appear {
-  0% {
-    transform: scale(0);
-  }
-  50% {
-    transform: scale(1.1);
-  }
-  75% {
-    transform: scale(0.9);
-  }
-  90% {
-    transform: scale(1.02);
-  }
-  100% {
-    transform: scale(1);
-  }
-}
-
-.animation-f {
-  animation-name: disappear;
-  animation-duration: 0.15s;
-  animation-timing-function: ease-in-out;
-}
-@keyframes disappear {
-  0% {
-    transform: translateX(100%);
-    opacity: 0;
-  }
-  /* 50% {
-    transform: scale(1.05);
-    opacity: 0.85;
-  }
-  75% {
-    transform: scale(0.9);
-    opacity: 0.95;
-  } */
-  100% {
-    transform: translateX(0);
-    opacity: 1;
-  }
 }

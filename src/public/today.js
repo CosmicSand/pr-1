@@ -40,7 +40,7 @@ const paginationBtn = document.querySelector('.exersizes-pagination-btn');
 
 // ============ Показуємо кнопку "Догори" при скролі вниз ============
 
-document.addEventListener('scroll', scrollToTopShowOrHide);
+scrollToTopShowOrHide();
 
 // ============ Запуск фільтрації при завантаженні сторінки ============
 
@@ -48,100 +48,71 @@ document.addEventListener('DOMContentLoaded', filterFetch());
 
 // ============ Запуск фільтрації при кліку на кнопку ============
 
-filterListener.addEventListener('click', imageRenderingByFilter);
-
-async function imageRenderingByFilter(e) {
+filterListener.addEventListener('click', e => {
   e.preventDefault();
+  addLoading();
   if (e.target.nodeName !== 'BUTTON') {
     return;
   } else {
-    try {
-      addLoading();
-      const filterType = e.target.textContent.trim();
-      sessionStorage.clear();
-      sessionStorage.setItem('filterType', JSON.stringify(filterType));
-
-      filterFetch(filterType);
-      exerciseNameHiding();
-      inputHidingAndRemoveListeners();
-      changeFilterBtnStyle(e);
-    } catch (error) {
-      console.log(error);
-      renderMessage();
-    } finally {
-      removeLoading();
-    }
+    const filterType = e.target.textContent.trim();
+    sessionStorage.clear();
+    sessionStorage.setItem('filterType', JSON.stringify(filterType));
+    filterFetch(filterType);
+    exerciseNameHiding();
+    inputHidingAndRemoveListeners();
+    changeFilterBtnStyle(e);
+    removeLoading();
   }
-}
+});
 
 // ============ Запуск фільтрації при кліку на загальну картку ============
 
-FILTER_IMG_CONTAINER.addEventListener('click', imageRenderingByType);
-// ================= Функція запуску фільтрації при кліку на картку типу  вправи =================
-async function imageRenderingByType(e) {
+FILTER_IMG_CONTAINER.addEventListener('click', choseFilterCard);
+// ================= Функція запуску фільтрації при кліку на картку вправи =================
+function choseFilterCard(e) {
+  e.preventDefault();
+  addLoading();
   if (
     e.target.nodeName !== 'DIV' &&
     e.target.nodeName !== 'H3' &&
     e.target.nodeName !== 'P'
   ) {
     return;
-  } else {
-    let delay;
-    if (e.pageY < 1200) {
-      delay = 50;
-    } else if (e.pageY > 1200 && e.pageY < 2000) {
-      delay = 250;
-    } else {
-      delay = 500;
-    }
-    const filterType = e.target.dataset.filter;
-    const filterSubType = e.target.dataset.target;
-    try {
-      addLoading();
-      scrollPage();
-      setTimeout(() => {
-        fetchExersizes(filterType, filterSubType, page);
-        showExerciseName(e);
-        inputVisualisationAddListeners();
-        sessionStorage.setItem('filterSubType', JSON.stringify(filterSubType));
-        sessionStorage.setItem('filterType', JSON.stringify(filterType));
-      }, delay);
-    } catch (error) {
-      renderMessage();
-    } finally {
-      removeLoading();
-    }
   }
+
+  const filterType = e.target.dataset.filter;
+  const filterSubType = e.target.dataset.target;
+
+  fetchExersizes(filterType, filterSubType, page);
+  showExerciseName(e);
+  inputVisualisationAddListeners();
+  removeLoading();
+  sessionStorage.setItem('filterSubType', JSON.stringify(filterSubType));
+  sessionStorage.setItem('filterType', JSON.stringify(filterType));
 }
+
 // ============ Запуск фільтрації при кліку на пагінацію ============
 
-PAGINATION_CONTAINER.addEventListener('click', imageRenderingByPagination);
-
-async function imageRenderingByPagination(e) {
+PAGINATION_CONTAINER.addEventListener('click', e => {
   e.preventDefault();
-
+  addLoading();
   if (e.target.nodeName !== 'BUTTON') {
     return;
   } else {
-    try {
-      const filterType = JSON.parse(sessionStorage.getItem('filterType'));
-      const page = e.target.textContent.trim();
-      let filterSubType;
-      addLoading();
+    const filterType = JSON.parse(sessionStorage.getItem('filterType'));
+    const page = e.target.textContent.trim();
+    let filterSubType;
 
-      if (sessionStorage.getItem(`filterSubType`)) {
-        filterSubType = JSON.parse(sessionStorage.getItem('filterSubType'));
-      }
-      scrollPage();
-      paginationFetch(filterType, filterSubType, page);
-      changingPaginationBtnStyle(e);
-    } catch (error) {
-      renderMessage();
-    } finally {
-      removeLoading();
+    if (sessionStorage.getItem(`filterSubType`)) {
+      filterSubType = JSON.parse(sessionStorage.getItem('filterSubType'));
     }
+    scrollPage();
+    paginationFetch(filterType, filterSubType, page);
+    changingPaginationBtnStyle(e);
+
+    removeLoading();
   }
-}
+});
 
 //  ===================== Запит по фільтру типів =====================
 
@@ -174,7 +145,6 @@ async function fetchExersizes(filterType, filterSubType, page) {
       throw new Error('No results found...');
     }
     renderExersizesCard(response);
-
     if (page === 1) {
       pagination(response);
     }
@@ -206,10 +176,6 @@ async function paginationFetch(filterType, filterSubType, page) {
 
   if (filterSubType) {
     response = await fetchExersizes(filterType, filterSubType, page);
-    const exCards = document.querySelectorAll('.second-filter');
-    exCards.forEach(card => {
-      card.classList.remove('animation');
-    });
   } else {
     response = await filterFetchPag(filterType, filterSubType, page);
   }
@@ -221,7 +187,7 @@ async function searchByName(e) {
   if (e.target.nodeName !== 'BUTTON' && e.keyCode !== 13) {
     return;
   }
-
+  addLoading();
   const searchQuery = document
     .querySelector('.exersizes-input')
     .value.trim()
@@ -232,7 +198,6 @@ async function searchByName(e) {
 
   try {
     if (searchQuery.length !== 0) {
-      addLoading();
       const response = await axios.get('/exercises', {
         params: keyGen(filterType, filterSubType, page, searchQuery),
       });
@@ -245,10 +210,9 @@ async function searchByName(e) {
     }
   } catch (error) {
     renderMessage();
-  } finally {
-    simpleInputCleaning();
-    removeLoading();
   }
+  simpleInputCleaning();
+  removeLoading();
 }
 
 //  ===================== Вставлення карток по фільтру =====================
@@ -281,15 +245,6 @@ async function renderFilterImg(resp) {
     })
     .join('');
   FILTER_IMG_LIST.insertAdjacentHTML('beforeend', markup);
-  const filterCards = document.querySelectorAll('.first-filter');
-  filterCards.forEach(card => {
-    card.classList.add('animation-f');
-  });
-  const disappearance = setTimeout(() => {
-    filterCards.forEach(card => {
-      card.classList.remove('animation-f');
-    });
-  }, 500);
   FILTER_IMG_CONTAINER.addEventListener('keyup', choseByEnter);
 }
 // ======================== Функція відкривання картки вправи по Enter ========================
@@ -316,8 +271,25 @@ function renderExersizesCard(resp) {
       let exerciseName = el.name;
       let exerciseTarget = el.target;
       id = el._id;
+      const viewPortWidth = window.innerWidth;
 
-      return `<li class="second-filter" aria-label="Exercise"><div class="exersizes-card" tabindex="0">
+      if (viewPortWidth >= 1440) {
+        if (exerciseName.length > 25) {
+          exerciseName =
+            el.name[0].toUpperCase() + el.name.slice(1, 25).trim() + '...';
+        }
+      } else if (viewPortWidth < 1440 && viewPortWidth >= 768) {
+        if (exerciseName.length > 17) {
+          exerciseName =
+            el.name[0].toUpperCase() + el.name.slice(1, 16).trim() + '...';
+        }
+      } else {
+        exerciseName =
+          el.name[0].toUpperCase() + el.name.slice(1, 20).trim() + '...';
+        console.log('320');
+      }
+
+      return `        <li class="second-filter" aria-label="Exercise"><div class="exersizes-card" tabindex="0">
     <div class="exersizes-card-header-cont">
         <div class="exersizes-card-workout-cont">
             <div class="exersizes-card-workout-header-title">workout</div>
@@ -345,15 +317,16 @@ function renderExersizesCard(resp) {
 <svg class="exersizes-card-title-icon" width="24" height="24" aria-label="Runner icon">
                     <use href="${icons}#runner"></use>
                 </svg>
-                <div class="card-title-wrapper">
-                <h3 class="exersizes-card-title-h card-title-last">${exerciseName}</h3></div>
+                <h3 class="exersizes-card-title-h" aria-description="${
+                  el.name
+                }">${exerciseName}</h3>
     </div>
     <div class="just-wrapper">
    
         <p class="exersizes-card-info-descr" aria-description="How much calories you burn during a certain amount of time">Burned calories:
             <span class="exersizes-card-info-data" data-burning-calories aria-label="Calories time">${
               el.burnedCalories
-            } / ${el.time} min</span></p>
+            } / ${el.time} min</span><p>
         <p class="exersizes-card-info-descr">Body part:
             <span class="exersizes-card-info-data" data-body-type>${
               el.bodyPart[0].toUpperCase() + el.bodyPart.slice(1)
@@ -368,16 +341,6 @@ function renderExersizesCard(resp) {
     })
     .join('');
   EXERCISES_CARD_LIST.insertAdjacentHTML('beforeend', markup);
-  const exCards = document.querySelectorAll('.second-filter');
-  exCards.forEach(card => {
-    card.classList.add('animation');
-  });
-  const disappearance = setTimeout(() => {
-    exCards.forEach(card => {
-      card.classList.remove('animation');
-    });
-  }, 500);
-
   EXERCISES_CARD_CONTAINER.addEventListener('keyup', choseByEnter);
 }
 
@@ -532,10 +495,10 @@ function changingPaginationBtnStyle(e) {
 // =================== Функція повернення сторінки до форми пошуку ===================
 
 function scrollToTopShowOrHide() {
-  if (window.scrollY > 100) {
-    document.querySelector('.up-link').classList.remove('hidden');
+  if (window.scrollY > 120) {
+    document.querySelector('.up-link').classList.add('show');
   } else {
-    document.querySelector('.up-link').classList.add('hidden');
+    document.querySelector('.up-link').classList.remove('show');
   }
 }
 
